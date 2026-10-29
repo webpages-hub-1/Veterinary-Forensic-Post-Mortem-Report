@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title> Veterinary Forensic 🫆 🔍 </title>
+<meta name="color-scheme" content="light">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=El+Messiri:wght@500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* beige + burgundy + warm gray + stamp red. No brown, no black. */
+  --paper:#efe4cf; --paper-hi:#f8f0de; --paper-lo:#e2d2b3;
+  --wine:#6b1a2d; --wine-deep:#44101f; --wine-glow:#8e2a42;
+  --stamp:#b0202f; --stamp-lt:#ee7f8c; --gray:#7b7368; --gray-lo:#b9b0a1;
+  --cover:#561425; --cover-deep:#37091a; --cream-text:#f6ecd7; --beige-text:#dccbb0;
+  --head:'Cormorant Garamond','Times New Roman',serif;
+  --ar-head:'El Messiri','Amiri',serif;
+  --ar-body:'Amiri','Times New Roman',serif;
+  --type:'Special Elite','Courier New',monospace;
+  --cover-photo:none; /* optional: set to url('your-image.jpg') to add a photo behind the cover */
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px);color-scheme:light}
+body{margin:0;min-height:100%;background:var(--paper);color:var(--wine-deep);font-family:var(--ar-body);font-size:1.1rem;line-height:1.9;overflow-x:hidden}
+button{font:inherit;cursor:pointer;color:inherit}
+:focus-visible{outline:2px solid var(--stamp);outline-offset:3px}
+
+/* paper grain + soft edge tint */
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;opacity:.16;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .42  0 0 0 0 .1  0 0 0 0 .18  0 0 0 .9 0'/></filter><rect width='180' height='180' filter='url(%23n)'/></svg>")}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:49;background:radial-gradient(ellipse at center,transparent 55%,rgba(107,26,45,.16) 100%)}
+
+.view{display:none;min-height:100vh;position:relative;padding:76px 18px 96px}
+.view.active{display:block;animation:viewIn .7s ease both}
+@keyframes viewIn{from{opacity:0}to{opacity:1}}
+.wrap{max-width:1040px;margin:0 auto;position:relative;z-index:3}
+
+/* nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;gap:6px;justify-content:center;
+  padding:calc(10px + env(safe-area-inset-top,0px)) 12px 10px;background:linear-gradient(var(--cover-deep) 55%,rgba(55,9,26,0))}
+.nav button{background:none;border:1px solid transparent;padding:3px 14px;font-family:var(--type);font-size:.8rem;color:var(--beige-text);letter-spacing:.12em}
+.nav button:hover{color:#fff}
+.nav button[aria-current="true"]{color:var(--stamp-lt);border-color:var(--stamp-lt)}
+
+/* ================= COVER ================= */
+#cover{background:var(--cover-photo) center/cover no-repeat,
+  radial-gradient(ellipse 85% 55% at 50% 28%,#7d2339,transparent 75%),var(--cover)}
+#cover.active{display:block}
+
+/* flashlight: small white pool of light that roams over the dark cover */
+.shade{position:fixed;inset:0;pointer-events:none;z-index:2;
+  background:
+   radial-gradient(circle var(--r,130px) at var(--mx,50%) var(--my,35%),rgba(255,255,255,.62) 0,rgba(255,255,255,.22) 50%,transparent 100%),
+   radial-gradient(circle calc(var(--r,130px)*3.4) at var(--mx,50%) var(--my,35%),transparent 0,transparent 30%,rgba(30,4,12,.5) 100%)}
+
+.tape{position:absolute;left:-10%;width:120%;padding:5px 0;background:repeating-linear-gradient(-45deg,var(--stamp) 0 22px,var(--paper) 22px 44px);
+  color:var(--wine);font-family:var(--type);font-size:.78rem;letter-spacing:.3em;white-space:nowrap;overflow:hidden;z-index:3;box-shadow:0 2px 12px rgba(20,2,8,.5)}
+.tape span{display:inline-block;background:var(--paper);padding:0 14px;margin-inline:8px}
+.tape.a{top:10%;transform:rotate(-4deg)}
+.tape.b{bottom:6%;transform:rotate(3deg)}
+
+.binder{margin-top:64px;text-align:center;text-shadow:0 1px 2px rgba(30,4,12,.85),0 0 10px rgba(30,4,12,.6)}
+.stamps{display:flex;justify-content:center;align-items:flex-start;gap:18px;flex-wrap:wrap;margin-bottom:26px}
+.stamp{display:inline-block;border:3px double var(--stamp-lt);color:var(--stamp-lt);font-family:var(--type);font-size:1.25rem;padding:3px 20px;letter-spacing:.24em;opacity:.95}
+.stamp.s1{transform:rotate(-6deg);font-size:1.5rem}
+.stamp.s2{transform:rotate(4deg);font-size:.95rem;margin-top:10px}
+.stamp.s2 sup{font-size:.7em}
+.dept{font-family:var(--type);color:var(--beige-text);font-size:.92rem;margin:0 0 10px;letter-spacing:.14em;text-transform:uppercase}
+h1.title{font-family:var(--head);font-weight:700;font-size:clamp(2.2rem,6.6vw,4.6rem);line-height:1.05;margin:0 0 4px;color:var(--cream-text);letter-spacing:.015em}
+h1.title em{font-weight:500;color:#f2b9c1}
+.caseno{display:inline-block;font-family:var(--type);color:var(--stamp-lt);font-size:1.05rem;letter-spacing:.3em;margin:10px 0 6px;border-top:1px solid var(--stamp-lt);border-bottom:1px solid var(--stamp-lt);padding:3px 14px}
+.ar-sub{font-family:var(--ar-head);font-weight:600;color:var(--cream-text);margin:6px 0 38px;font-size:1.25rem}
+.typed{font-family:var(--type);font-size:.88rem;color:var(--beige-text);margin:0 auto 4px;max-width:640px;line-height:1.8}
+.typed.ar{font-family:var(--ar-body);font-size:1.05rem;margin-bottom:38px}
+
+.sup{margin:0 auto 38px;max-width:640px}
+.sup small{display:block;font-family:var(--type);color:var(--beige-text);font-size:.85rem;letter-spacing:.2em;text-transform:uppercase;margin-bottom:2px}
+.sup strong{display:block;font-family:var(--head);font-style:italic;font-weight:600;font-size:clamp(1.9rem,5vw,3rem);color:var(--cream-text);line-height:1.2}
+.sup::after{content:"";display:block;width:120px;height:1px;background:var(--cream-text);margin:12px auto 0;opacity:.5}
+
+h2.sec{font-family:var(--type);font-weight:400;color:var(--stamp-lt);margin:0 0 14px;font-size:.95rem;letter-spacing:.34em}
+/* names: plain typed text, no boxes */
+.team{list-style:none;margin:0 auto 44px;padding:0;max-width:760px;display:flex;flex-wrap:wrap;justify-content:center;gap:2px 0;font-family:var(--head);font-weight:600;font-size:clamp(1.25rem,3.4vw,1.75rem);color:var(--cream-text);line-height:1.6}
+.team li{display:inline-block}
+.team li:not(:last-child)::after{content:"✦";font-size:.5em;color:var(--stamp-lt);margin:0 .9em;vertical-align:middle}
+
+.cta{position:relative;background:var(--paper-hi);border:2px solid var(--paper-hi);color:var(--wine);padding:14px 40px;font-family:var(--type);font-size:1.05rem;letter-spacing:.24em;transition:.3s;box-shadow:5px 5px 0 rgba(238,127,140,.55);text-shadow:none}
+.cta .ar{display:block;font-family:var(--ar-head);letter-spacing:0;font-size:1.05rem;margin-top:2px}
+.cta:hover{background:var(--stamp-lt);border-color:var(--stamp-lt);color:var(--cover-deep);transform:translate(-2px,-2px);box-shadow:7px 7px 0 rgba(246,236,215,.4)}
+
+/* ================= REPORT ================= */
+#report,#analysis{background:
+  repeating-linear-gradient(135deg,rgba(255,255,255,.03) 0 2px,transparent 2px 16px),
+  radial-gradient(ellipse 90% 60% at 50% 0%,#7d2339,transparent 75%),var(--cover)}
+.doc{--pad:clamp(22px,4.5vw,56px);background:var(--paper-hi);border:1px solid rgba(255,255,255,.4);border-top:5px solid var(--stamp);padding:var(--pad);box-shadow:0 0 0 6px rgba(246,236,215,.08),0 30px 70px rgba(20,2,8,.55);position:relative;overflow:hidden}
+.doc::before{content:"";position:absolute;inset:8px;border:1px solid rgba(107,26,45,.22);pointer-events:none}
+.doc::after{content:"CONFIDENTIAL";position:absolute;top:52%;left:50%;transform:translate(-50%,-50%) rotate(-24deg);font-family:var(--type);font-size:clamp(2rem,9.5vw,7rem);letter-spacing:.18em;color:rgba(176,32,47,.07);border:6px double rgba(176,32,47,.08);padding:0 .3em;pointer-events:none;white-space:nowrap}
+.band{position:relative;margin:calc(-1*var(--pad)) calc(-1*var(--pad)) 20px;height:30px;display:grid;place-items:center;background:repeating-linear-gradient(-45deg,var(--wine) 0 14px,var(--paper-hi) 14px 28px)}
+.band span{background:var(--paper-hi);color:var(--wine);font-family:var(--type);font-size:.7rem;letter-spacing:.3em;padding:2px 14px;border:1px solid var(--wine);white-space:nowrap}
+.clip{position:absolute;top:2px;left:clamp(26px,6vw,70px);width:28px;z-index:3;color:var(--gray);filter:drop-shadow(1px 2px 1px rgba(20,2,8,.3))}
+.doc .form{font-family:var(--type);font-size:.72rem;letter-spacing:.2em;color:var(--gray);margin:0 0 4px;position:relative}
+.doc .conf{position:absolute;top:calc(var(--pad) + 4px);right:22px;font-family:var(--type);color:var(--stamp);border:3px double var(--stamp);padding:0 12px;transform:rotate(4deg);font-size:.95rem;letter-spacing:.2em;opacity:.9;mix-blend-mode:multiply;z-index:2}
+.doc h2{margin:28px 0 4px;font-family:var(--ar-head);font-weight:700;font-size:clamp(1.5rem,3.6vw,2.3rem);color:var(--wine);text-align:right;line-height:1.5;position:relative}
+.doc .en{font-family:var(--head);font-style:italic;font-weight:500;color:var(--wine-glow);font-size:1.15rem;text-align:right;margin-bottom:24px;direction:ltr;position:relative}
+.info{direction:rtl;text-align:right;margin:0 0 34px;padding-bottom:20px;border-bottom:3px double rgba(107,26,45,.35);position:relative}
+.info::after{content:"";display:block;clear:both}
+.info p{margin:0 0 2px;font-size:1.2rem}
+.info b{font-family:var(--ar-head);font-weight:700;color:var(--wine);margin-inline-end:.4em}
+.info b::after{content:":"}
+.seal{float:left;width:clamp(78px,16vw,116px);margin:-6px 0 6px 12px;color:var(--stamp);transform:rotate(-12deg);opacity:.85;mix-blend-mode:multiply}
+.redact{background:var(--wine);color:transparent;padding:0 .6em;cursor:help;border-radius:1px;transition:color .25s}
+.redact:hover,.redact:focus{color:var(--paper-hi);outline:none}
+.sub{--ln:2.2rem;direction:rtl;text-align:right;border-right:3px double var(--stamp);padding-right:20px;margin-bottom:34px;position:relative;
+  background:repeating-linear-gradient(to bottom,transparent 0,transparent calc(var(--ln) - 1px),rgba(107,26,45,.2) calc(var(--ln) - 1px),rgba(107,26,45,.2) var(--ln))}
+.sub h3{margin:0;font-family:var(--ar-head);font-size:1.45rem;line-height:var(--ln);color:var(--wine);font-weight:700}
+.sub .en{font-size:1rem;line-height:var(--ln);color:var(--gray);margin:0 0 var(--ln);text-align:right}
+.sub p{margin:0 0 var(--ln);font-size:1.22rem;line-height:var(--ln);max-width:70ch;margin-inline-start:auto}
+.sub p:last-child{margin-bottom:0}
+.sub mark{background:linear-gradient(transparent 14%,rgba(176,32,47,.22) 14%);color:var(--wine-deep);padding:0 3px}
+
+.reel{margin:10px 0 40px;position:relative}
+.reel h3{font-family:var(--ar-head);font-size:1.15rem;margin:0 0 10px;color:var(--wine);direction:rtl;text-align:right}
+.reel h3 em{font-style:normal;font-family:var(--type);color:var(--stamp);font-size:.8rem;letter-spacing:.2em;margin-inline-end:10px}
+.frame{position:relative;aspect-ratio:16/9;background:var(--wine-deep);border:2px solid var(--wine);overflow:hidden;box-shadow:6px 6px 0 rgba(107,26,45,.22)}
+.frame video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:var(--wine-deep)}
+.ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;
+  background:repeating-linear-gradient(0deg,rgba(107,26,45,.06) 0 2px,transparent 2px 6px),var(--paper-lo)}
+.ph.hide{display:none}
+.play{width:76px;height:76px;border-radius:50%;border:2px solid var(--wine);background:rgba(107,26,45,.08);display:grid;place-items:center;transition:.25s}
+.play:hover{background:var(--wine)}
+.play svg{width:28px;fill:var(--wine);margin-left:5px;transition:.25s}.play:hover svg{fill:var(--paper-hi)}
+.ph p{margin:0;font-family:var(--type);color:var(--gray);font-size:.88rem;letter-spacing:.1em}
+.ph label{font-size:1rem;color:var(--stamp);text-decoration:underline;cursor:pointer}
+.ph input{position:absolute;opacity:0;width:1px;height:1px}
+.ph input:focus-visible+span{outline:2px solid var(--stamp)}
+.scale{position:absolute;left:14px;right:14px;bottom:10px;height:22px;pointer-events:none;border-bottom:2px solid var(--stamp);
+  background:repeating-linear-gradient(90deg,var(--stamp) 0 2px,transparent 2px 10%) bottom/100% 10px no-repeat;color:var(--stamp);font-family:var(--type);font-size:.7rem;direction:ltr}
+.scale span{position:absolute;bottom:12px}.scale span:nth-child(1){left:0}.scale span:nth-child(2){left:50%;transform:translateX(-50%)}.scale span:nth-child(3){right:0}
+.hud{position:absolute;top:10px;left:12px;right:12px;display:flex;justify-content:space-between;font-family:var(--type);font-size:.75rem;color:var(--paper-hi);pointer-events:none}
+.rec{color:#ff8a94}.rec::before{content:"● ";animation:blink 1.2s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+
+.go{display:block;width:100%;border:2px solid var(--wine);background:var(--wine);color:var(--paper-hi);padding:20px 18px;font-family:var(--ar-head);font-weight:700;font-size:clamp(1.1rem,2.6vw,1.45rem);transition:.3s;direction:rtl;box-shadow:5px 5px 0 rgba(176,32,47,.4)}
+.go small{display:block;font-family:var(--type);font-weight:400;font-size:.72em;letter-spacing:.22em;color:var(--paper-lo);margin-top:2px;direction:ltr}
+.go:hover{background:var(--stamp);border-color:var(--stamp);transform:translate(-2px,-2px)}
+
+/* ================= ANALYSIS: 3 squares in one row, always ================= */
+.head3{text-align:center;margin-bottom:34px}
+.head3 h2{font-family:var(--ar-head);font-weight:700;font-size:clamp(1.6rem,4vw,2.6rem);margin:0;color:var(--cream-text)}
+.head3 p{font-family:var(--type);color:var(--beige-text);margin:6px 0 0;font-size:.85rem;letter-spacing:.08em}
+.grid3{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;max-width:min(230px,72vw);margin:0 auto}
+.card{--c:var(--wine);container-type:inline-size;position:relative;aspect-ratio:1/1;background:var(--paper-hi);border:1px solid color-mix(in srgb,var(--c) 45%,transparent);
+  padding:clamp(6px,1.4vw,14px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  box-shadow:4px 4px 0 color-mix(in srgb,var(--c) 28%,transparent);transition:transform .3s,box-shadow .3s}
+.card::before{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:var(--c)}
+.card::after{content:"";position:absolute;inset:5px;border:1px dashed color-mix(in srgb,var(--c) 35%,transparent);pointer-events:none}
+.card:hover,.card:focus-visible{transform:translateY(-6px);box-shadow:7px 10px 0 color-mix(in srgb,var(--c) 35%,transparent)}
+.card.c2{--c:var(--stamp)}.card.c3{--c:var(--gray)}
+.card .tag{position:absolute;top:9cqi;left:9cqi;font-family:var(--type);font-size:max(8px,7.5cqi);color:var(--c);letter-spacing:.1em}
+.card .ico{width:34cqi;height:34cqi;margin-bottom:5cqi;color:var(--c)}
+.card .ar{order:2;font-family:var(--ar-head);font-weight:600;font-size:max(8px,6.6cqi);line-height:1.3;margin-top:2cqi;color:var(--gray)}
+.card h3{order:1;font-family:var(--head);font-weight:700;font-size:max(10px,10.6cqi);line-height:1.12;letter-spacing:.03em;margin:0;color:var(--wine-deep);text-transform:uppercase}
+.card .open{position:absolute;bottom:7cqi;font-family:var(--type);font-size:max(8px,6.5cqi);color:var(--c);letter-spacing:.1em}
+@container (max-width:150px){.card .open b{display:none}}
+
+dialog{--c:var(--wine);position:fixed;inset:0;margin:0;max-width:none;width:100vw;height:100dvh;max-height:none;padding:0;border:0;background:var(--paper-hi);color:var(--wine-deep);box-shadow:8px 8px 0 rgba(107,26,45,.3),0 40px 100px rgba(68,16,31,.4);overflow:auto}
+dialog::backdrop{background:rgba(88,16,36,.55);backdrop-filter:blur(3px)}
+dialog[open]{animation:viewIn .35s ease both}
+.mhead{position:sticky;top:0;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 22px;background:var(--c);color:var(--paper-hi);z-index:2}
+.mhead h3{margin:0;font-family:var(--head);font-weight:700;font-size:1.3rem;letter-spacing:.06em}
+.mhead h3 span{display:block;font-family:var(--ar-head);font-size:.95rem;font-weight:500;letter-spacing:0;opacity:.9}
+.x{background:none;border:1px solid rgba(248,240,222,.6);color:var(--paper-hi);width:38px;height:38px;font-size:1.3rem;line-height:1}.x:hover{background:var(--paper-hi);color:var(--c)}
+.mbody{padding:24px 22px 30px;display:grid;gap:20px}
+.blk{border:1px dashed color-mix(in srgb,var(--wine) 45%,transparent);padding:14px 18px;background:rgba(255,255,255,.35)}
+.blk h4{margin:0 0 8px;font-family:var(--type);font-weight:400;color:var(--c);font-size:.88rem;letter-spacing:.06em}
+.blk [contenteditable]{min-height:70px;color:var(--gray);outline:none}
+.blk [contenteditable]:focus{color:var(--wine-deep)}
+.imgs{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.img{aspect-ratio:4/3;display:grid;place-items:center;text-align:center;font-family:var(--type);font-size:.8rem;color:var(--gray);border:1px solid var(--gray-lo);background:repeating-linear-gradient(45deg,var(--paper-lo) 0 10px,var(--paper) 10px 20px);cursor:pointer;overflow:hidden;position:relative}
+.img:hover{border-color:var(--c);color:var(--c)}.img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.img input{position:absolute;opacity:0;inset:0;cursor:pointer}
+
+
+/* ================= DEATH & ASPHYXIA : 7 EXHIBITS (phone-width column on every screen) ================= */
+.dx{padding:18px 14px 30px;display:grid;gap:34px;background:
+  repeating-linear-gradient(135deg,rgba(107,26,45,.035) 0 2px,transparent 2px 14px),var(--paper-hi)}
+.dx-intro{text-align:center;font-family:var(--type);color:var(--wine);letter-spacing:.12em}
+.dx-intro small{display:block;font-size:.72rem;color:var(--gray);letter-spacing:.22em}
+.dx-intro strong{display:block;font-family:var(--ar-head);font-size:1.45rem;letter-spacing:0;margin:2px 0 6px}
+.dx-intro p{margin:0 0 12px;font-family:var(--ar-body);letter-spacing:0;font-size:1rem;color:var(--gray);line-height:1.7}
+.dx-idx{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;direction:ltr}
+.dx-idx button{width:34px;height:34px;border:1.5px solid var(--wine);background:transparent;color:var(--wine);font-family:var(--type);font-size:.8rem;transition:.2s}
+.dx-idx button:hover{background:var(--wine);color:var(--paper-hi);transform:translateY(-2px)}
+.ex{position:relative;direction:rtl;text-align:right;background:var(--paper);border:1px solid rgba(107,26,45,.3);
+  padding:44px 16px 22px;box-shadow:5px 5px 0 rgba(107,26,45,.16);scroll-margin-top:76px}
+.ex::before{content:"";position:absolute;inset:6px;border:1px dashed rgba(107,26,45,.25);pointer-events:none}
+.ex>*{position:relative}
+.extab{position:absolute!important;top:-13px;right:16px;background:var(--wine);color:var(--paper-hi);font-family:var(--type);font-size:.78rem;letter-spacing:.24em;padding:3px 14px;direction:ltr;box-shadow:3px 3px 0 rgba(176,32,47,.35)}
+.stampx{position:absolute!important;top:12px;left:12px;border:2.5px double var(--stamp);color:var(--stamp);font-family:var(--type);font-size:.66rem;letter-spacing:.14em;padding:1px 9px;transform:rotate(-7deg);mix-blend-mode:multiply;opacity:.88;direction:ltr;text-align:center;max-width:46%}
+.exh{margin:4px 0 0;font-family:var(--ar-head);font-weight:700;font-size:1.42rem;line-height:1.45;color:var(--wine)}
+.exen{direction:ltr;text-align:right;font-family:var(--head);font-style:italic;font-weight:500;font-size:1.02rem;color:var(--wine-glow);margin-bottom:10px;line-height:1.25}
+.kick{margin:0 0 16px;padding:6px 10px;border-right:3px solid var(--stamp);background:rgba(176,32,47,.07);font-size:.98rem;line-height:1.7;color:var(--stamp);font-family:var(--ar-head);font-weight:500}
+.exp p{margin:0 0 .75em;font-size:1.1rem;line-height:2}
+.exp ul{margin:0 0 .9em;padding:0;list-style:none}
+.exp li{position:relative;padding-right:1.5em;margin-bottom:.25em;font-size:1.08rem;line-height:1.9}
+.exp li::before{content:"✦";position:absolute;right:0;top:.05em;color:var(--stamp);font-size:.8em}
+.exp mark{background:linear-gradient(transparent 14%,rgba(176,32,47,.22) 14%);color:var(--wine-deep);padding:0 3px}
+.exp .lat{font-family:var(--head);font-style:italic;font-weight:600;color:var(--wine-glow);direction:ltr;unicode-bidi:isolate}
+.s5{margin-top:16px;padding-top:12px;border-top:1px dashed rgba(107,26,45,.4)}
+.s5 h6{margin:0;font-family:var(--ar-head);font-size:1.18rem;font-weight:700;color:var(--wine);line-height:1.5}
+.s5 h6 b{display:inline-block;background:var(--stamp);color:var(--paper-hi);font-family:var(--type);font-weight:400;font-size:.72rem;letter-spacing:.1em;padding:0 7px;margin-inline-start:8px;direction:ltr;vertical-align:middle}
+.s5 .exen{font-size:.95rem;color:var(--gray);margin-bottom:4px}
+.fig{margin:20px 2px 8px;padding:9px;background:#fbf5e6;border:1px solid var(--gray-lo);box-shadow:3px 5px 0 rgba(107,26,45,.2);transform:rotate(var(--rot,-1deg));position:relative;direction:ltr}
+.fig:nth-of-type(even){--rot:1.1deg}
+.fig::before{content:"";position:absolute;top:-12px;left:50%;width:84px;height:22px;transform:translateX(-50%) rotate(-3deg);background:rgba(238,127,140,.55);border:1px dashed rgba(176,32,47,.4);z-index:2}
+.fm{background:var(--wine-deep);min-height:150px;display:grid;place-items:center;overflow:hidden}
+.fm img,.fm video{display:block;width:100%;height:auto;max-height:72vh;object-fit:contain;background:var(--wine-deep)}
+.fig figcaption{display:flex;justify-content:space-between;gap:8px;margin-top:6px;font-family:var(--type);font-size:.68rem;letter-spacing:.12em;color:var(--gray)}
+.fig figcaption i{font-style:normal;color:var(--stamp)}
+.fig[data-kind="video"] figcaption i::before{content:"● ";animation:blink 1.2s steps(2) infinite}
+.miss{display:flex;flex-direction:column;align-items:center;gap:4px;padding:26px 14px;text-align:center;cursor:pointer;color:var(--paper-lo);font-family:var(--type);font-size:.8rem;position:relative;direction:rtl}
+.miss b{font-size:1.1rem;color:var(--stamp-lt);letter-spacing:.2em}
+.miss u{color:var(--cream-text)}
+.miss input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.chain{display:grid;gap:0;margin:6px 0 16px;text-align:center}
+.chain div{border:1.5px solid var(--wine);background:var(--paper-hi);padding:7px 10px;font-family:var(--ar-head);font-weight:600;font-size:1.02rem;line-height:1.5}
+.chain div small{display:block;direction:ltr;font-family:var(--type);font-weight:400;font-size:.66rem;letter-spacing:.14em;color:var(--gray)}
+.chain i{display:block;font-style:normal;color:var(--stamp);line-height:1.3;font-size:.9rem}
+.chain div:last-child{background:var(--stamp);border-color:var(--stamp);color:var(--paper-hi)}
+.chain div:last-child small{color:var(--paper-lo)}
+.sp{border:1.5px solid var(--wine);background:var(--paper-hi);padding:12px 14px 8px;margin:0 0 14px;box-shadow:3px 3px 0 rgba(107,26,45,.18)}
+.sp h6{margin:0 0 6px;font-family:var(--ar-head);font-size:1.12rem;font-weight:700;color:var(--wine)}
+.sp h6 small{display:block;direction:ltr;text-align:right;font-family:var(--type);font-weight:400;font-size:.66rem;letter-spacing:.16em;color:var(--stamp)}
+.sp.b{border-color:var(--gray);box-shadow:3px 3px 0 rgba(123,115,104,.25)}
+.sp.b li::before{color:var(--gray)}
+.vr{padding:10px 0;border-bottom:1px dashed rgba(107,26,45,.4)}
+.vr b{display:block;font-family:var(--ar-head);color:var(--wine);font-size:1.12rem}
+.vr small{display:block;direction:ltr;text-align:right;font-family:var(--type);font-size:.64rem;letter-spacing:.14em;color:var(--stamp)}
+.vr span{display:block;font-size:1.06rem;line-height:1.85;margin-top:2px}
+.concl{margin:16px 0 4px;padding:12px 14px;background:var(--wine);color:var(--paper-hi);border:2px solid var(--wine-deep);box-shadow:4px 4px 0 rgba(176,32,47,.4)}
+.concl b{display:block;font-family:var(--ar-head);font-size:1.2rem;margin-bottom:4px;color:var(--stamp-lt)}
+.concl p{margin:0 0 .5em;font-size:1.04rem;line-height:1.9}
+.closed{display:block;width:max-content;max-width:100%;margin:22px auto 4px;border:5px double var(--stamp);color:var(--stamp);font-family:var(--type);font-size:1.7rem;letter-spacing:.14em;padding:4px 18px;transform:rotate(-6deg);mix-blend-mode:multiply;text-align:center;direction:ltr}
+.closed small{display:block;font-size:.62rem;letter-spacing:.2em}
+.rv{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+.rv.in{opacity:1;transform:none}
+.rv.in .closed{animation:slam .6s .25s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes slam{from{transform:rotate(-6deg) scale(2.4);opacity:0}to{transform:rotate(-6deg) scale(1);opacity:1}}
+
+
+/* ===== BLOOD STAIN (same phone-width column) ===== */
+.fx{direction:ltr;text-align:center;margin:4px 0 14px;padding:10px 8px;border:1.5px dashed var(--stamp);background:var(--paper-hi);font-family:var(--head);font-style:italic;font-weight:600;font-size:1.5rem;color:var(--wine)}
+.fx small{display:block;font-family:var(--type);font-style:normal;font-weight:400;font-size:.64rem;letter-spacing:.18em;color:var(--stamp)}
+
+
+.back{flex:none;display:inline-flex;align-items:center;gap:7px;padding:8px 18px 8px 13px;font-family:var(--type);font-size:.85rem;letter-spacing:.2em;color:var(--wine);
+  background:linear-gradient(180deg,#fffaf0 0%,var(--paper-hi) 45%,var(--paper-lo) 100%);border:1.5px solid var(--paper-hi);outline:1px solid rgba(255,255,255,.35);outline-offset:2px;border-radius:3px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.95),inset 0 -2px 0 rgba(107,26,45,.18),0 4px 0 var(--wine-deep),0 7px 12px rgba(20,2,8,.35);transition:transform .15s,box-shadow .15s,color .2s}
+.back i{font-style:normal;font-size:1.35rem;line-height:.8;color:var(--stamp);transition:transform .2s}
+.back:hover{color:var(--stamp)}.back:hover i{transform:translateX(-3px)}
+.back:active{transform:translateY(3px);box-shadow:inset 0 1px 0 rgba(255,255,255,.95),inset 0 -1px 0 rgba(107,26,45,.18),0 1px 0 var(--wine-deep),0 2px 5px rgba(20,2,8,.3)}
+
+dialog:not([open]){display:none}
+dialog .mhead{padding:calc(14px + env(safe-area-inset-top,0px)) max(16px,calc((100% - 520px)/2 + 14px)) 14px}
+#m1,#m2{background:repeating-linear-gradient(135deg,rgba(107,26,45,.035) 0 2px,transparent 2px 14px),var(--paper-hi)}
+.dx{width:100%;max-width:520px;margin:0 auto;padding-bottom:calc(30px + env(safe-area-inset-bottom,0px))}
+#m3 .mbody{max-width:560px;margin:0 auto;width:100%}
+
+/* ===== POST-MORTEM CHANGES: Rigor Mortis (English, LTR) ===== */
+#m3{background:repeating-linear-gradient(135deg,rgba(107,26,45,.035) 0 2px,transparent 2px 14px),var(--paper-hi)}
+.ex.en{direction:ltr;text-align:left}
+.ex.en .extab{right:auto;left:16px}
+.ex.en .stampx{left:auto;right:12px}
+.ex.en .kick{border-right:0;border-left:3px solid var(--stamp);font-family:var(--head);font-style:italic;font-weight:500;font-size:1.05rem}
+.ex.en .exh{font-family:var(--head);font-size:1.7rem;font-weight:600}
+.ex.en .exen{text-align:left;font-size:1.05rem}
+.ex.en .exp p,.ex.en .exp li{font-family:var(--head);font-size:1.18rem;line-height:1.65}
+.ex.en .exp li{padding-right:0;padding-left:1.5em}
+.ex.en .exp li::before{right:auto;left:0}
+.ex.en .exp ul ul{margin:.3em 0 0}
+.ex.en .sp h6{font-family:var(--head);font-size:1.2rem}
+.ex.en .sp h6 small{text-align:left}
+.ex.en .chain div{font-family:var(--head);font-size:1.12rem}
+.ex.en .concl p{font-family:var(--head);font-size:1.12rem;line-height:1.6}
+.sec-lab{font-family:var(--type);font-size:.74rem;letter-spacing:.24em;color:var(--wine);text-align:center;direction:ltr;display:flex;align-items:center;gap:10px}
+.sec-lab::before,.sec-lab::after{content:"";flex:1;border-top:1.5px dashed rgba(107,26,45,.45)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:6px 4px 0}
+.pair .fig{margin:10px 0 4px}
+.pair.one{grid-template-columns:1fr}
+.pair{align-items:center}
+.pair .fm{min-height:0;aspect-ratio:auto;background:transparent}
+.pair .fm img,.pair .fm video{width:100%;height:auto;object-fit:contain;max-height:none}
+.pair .miss{padding:14px 6px}
+.zoo{display:grid;grid-template-columns:1fr 1fr;gap:20px 14px;padding:4px 4px 0}
+.zoo .fig{margin:10px 0 0;padding:8px 8px 10px}
+.zoo .fig.hero{grid-column:1/-1}
+.zoo .fm{min-height:0;aspect-ratio:1/1}
+.zoo .hero .fm{aspect-ratio:16/10}
+.zoo .fm img{height:100%;object-fit:cover;max-height:none}
+.zoo .miss{padding:12px 4px}
+.an-cap{margin-top:8px;text-align:center;font-family:var(--head);font-style:italic;font-weight:600;font-size:1.25rem;letter-spacing:.06em;color:var(--wine)}
+.an-cap::after{content:"";display:block;width:34px;margin:4px auto 0;border-top:2px solid var(--stamp)}
+
+@media(max-width:600px){.doc .conf{position:static;display:inline-block;margin:0 0 6px;transform:rotate(-2deg)}.nav button{padding:3px 8px;font-size:.72rem}.view{padding-inline:12px}.team li:not(:last-child)::after{margin:0 .6em}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Case file sections">
+  <button data-go="cover" aria-current="true">COVER</button>
+  <button data-go="report">REPORT</button>
+  <button data-go="analysis">ANALYSIS</button>
+</nav>
+
+<!-- ============ SECTION 1: COVER ============ -->
+<main id="cover" class="view active">
+  <div class="shade" aria-hidden="true"></div>
+  <div class="tape a" aria-hidden="true"><span>CLASSIFIED</span><span>DO NOT CROSS</span><span>CLASSIFIED</span><span>DO NOT CROSS</span><span>CLASSIFIED</span><span>DO NOT CROSS</span></div>
+  <div class="tape b" aria-hidden="true"><span>VETERINARY FORENSICS</span><span>NOT A PETTING ZOO</span><span>VETERINARY FORENSICS</span><span>NOT A PETTING ZOO</span><span>VETERINARY FORENSICS</span></div>
+
+  <div class="wrap binder">
+    <div class="stamps">
+      <div class="stamp s1">TOP SECRET</div>
+      <div class="stamp s2">EYES ONLY<sup>*</sup></div>
+    </div>
+    <p class="dept">Department of Veterinary Forensic Pathology</p>
+    <h1 class="title">Veterinary Forensic<br><em>Pathology Case File</em></h1>
+    <div class="caseno">№ 2026-GOAT-042</div>
+    <p class="ar-sub">ملف قضية الطب الشرعي البيطري · سري للغاية</p>
+
+
+    <div class="sup">
+      <small>Under the Supervision of</small>
+      <strong>Dr. Wafaa A. Ali</strong>
+    </div>
+
+    <h2 class="sec">INVESTIGATING TEAM</h2>
+    <ul class="team">
+      <li>Hala Hatem</li><li>Eman Atia</li><li>Rawan Ehab</li><li>Rewan Mohamed</li><li>Mariam Hany</li><li>Mariam Mohamed</li><li>Farah Emad</li><li>Dania Tarek</li><li>Reem Samy</li><li>Yahdeen Nael</li>
+    </ul>
+
+    <button class="cta" data-go="report">OPEN CASE FILE<span class="ar">افتح ملف القضية</span></button>
+  </div>
+</main>
+
+<!-- ============ SECTION 2: REPORT ============ -->
+<main id="report" class="view">
+  <div class="wrap">
+    <article class="doc">
+      <div class="band" aria-hidden="true"><span>CLASSIFIED · AUTHORIZED PERSONNEL ONLY</span></div>
+      <svg class="clip" viewBox="0 0 32 56" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M9 38V12a7 7 0 0114 0v34a10 10 0 01-20 0V16"/></svg>
+      <div class="conf">EXHIBIT A</div>
+      <div class="form">FORM VF-7 · VETERINARY FORENSIC UNIT · CASE 2026-GOAT-042</div>
+      <h2>تقرير الفحص التشريحي والطب الشرعي البيطري</h2>
+      <div class="en">Veterinary Forensic Post-Mortem Report: Asphyxial Death in a Goat</div>
+
+      <div class="info">
+        <svg class="seal" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="56" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="60" cy="60" r="45" fill="none" stroke="currentColor" stroke-width="1.2"/><defs><path id="sealpath" d="M60 60 m-37 0 a37 37 0 1 1 74 0 a37 37 0 1 1 -74 0"/></defs><text font-family="Special Elite, Courier New, monospace" font-size="10" fill="currentColor"><textPath href="#sealpath" textLength="226" lengthAdjust="spacing">VET FORENSICS · VERIFIED ·</textPath></text><text x="60" y="70" text-anchor="middle" font-family="Cormorant Garamond, serif" font-weight="700" font-size="28" fill="currentColor">VF</text></svg>
+        <p><b>الجهة المستصدرة</b>وحدة الطب الشرعي البيطري</p>
+        <p><b>نوع الحيوان</b>ماعز (Goat)</p>
+        <p><b>تاريخ الفحص</b>24 أكتوبر 2026</p>
+        <p><b>المشتبه به</b><span class="redact" tabindex="0">مجهول… حتى الآن</span></p>
+      </div>
+
+      <section class="sub" dir="rtl">
+        <h3>البلاغ والمعاينة الميدانية</h3>
+        <div class="en" dir="ltr">Case History &amp; Scene Investigation</div>
+        <p>ورد إلى وحدة الطب الشرعي البيطري بلاغ يفيد بالعثور على جثة ماعز ملقاة على جانب الطريق العام، مع الاشتباه في ذبح الحيوان عمدًا، نظرًا لوجود جرح عميق بمنطقة الرقبة، مما أثار الشكوك حول تعرضه للذبح الجنائي.</p>
+        <p>وبناءً على البلاغ، انتقل فريق الفحص البيطري الشرعي إلى موقع العثور على الجثة لإجراء المعاينة الخارجية والتشريحية، وتحديد سبب الوفاة، وفحص طبيعة جرح الرقبة، والتمييز بين الإصابات التي حدثت قبل الوفاة والتغيرات التي طرأت على الجثة بعدها.</p>
+        <p>أظهر الفحص الخارجي وجود <mark>جرح غائر في الجزء الخلفي من الرقبة</mark>، يمتد إلى الأنسجة العميقة، مع سلامة الجزء الأمامي من الرقبة والبلعوم من وجود قطع ظاهر يشبه جرح الذبح التقليدي.</p>
+        <p>كما بدت <mark>حواف الجرح باهتة وجافة</mark>، دون وجود نزيف نشط ظاهر. وقد أثارت هذه الملاحظات احتمال أن يكون الجرح ناتجًا عن نهش حيواني بعد الوفاة، وليس السبب المباشر لنفوق الحيوان.</p>
+      </section>
+
+      <section class="reel">
+        <h3><em>EVIDENCE REEL</em>فيديو التوثيق الميداني</h3>
+        <div class="frame" id="frame">
+          <video id="vid" controls playsinline preload="metadata"><source src="report.MOV" type="video/mp4"><source src="report.mov" type="video/quicktime"><source src="report.webm" type="video/webm"><source src="report.m4v" type="video/mp4"></video>
+          <div class="ph" id="ph">
+            <button class="play" id="playBtn" aria-label="Play evidence video"><svg viewBox="0 0 24 24"><path d="M5 3l16 9-16 9z"/></svg></button>
+            <p>EVIDENCE REEL · NO FOOTAGE LOADED</p>
+            <label>اختر ملف الفيديو من جهازك<input type="file" id="vfile" accept="video/*"><span></span></label>
+          </div>
+          <div class="hud" aria-hidden="true"><span class="rec">REC</span><span>CASE 2026-GOAT-042</span><span>CAM 01</span></div>
+          <div class="scale" aria-hidden="true"><span>0 cm</span><span>10 cm</span><span>20 cm</span></div>
+        </div>
+      </section>
+
+      <button class="go" data-go="analysis">انتقل إلى التحليل التفصيلي للقطاعات<small>PROCEED TO DETAILED ANALYSIS</small></button>
+    </article>
+  </div>
+</main>
+
+<!-- ============ SECTION 3: ANALYSIS ============ -->
+<main id="analysis" class="view">
+  <div class="wrap">
+    <header class="head3">
+      <h2>التحليل التفصيلي للقطاعات</h2>
+      <p>Detailed Analysis · select a module to open its report</p>
+    </header>
+
+    <div class="grid3">
+      <button class="card c1" data-modal="m1" aria-label="Module A: الوفاة والاختناق">
+        <div class="tag">A</div>
+        <svg class="ico" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M8 24c0-8 7-14 16-14s14 5 14 12c0 5-3 8-6 10l-2 10H22l-2-8c-8-1-12-5-12-10z"/><path d="M42 18c6 0 12 3 14 9M42 30c6 0 10 2 12 6M22 44v8M30 44v8"/><circle cx="20" cy="22" r="2"/></svg>
+        <div class="ar">الوفاة والاختناق</div>
+        <h3>Death &amp; Asphyxia</h3>
+        <div class="open"><b>OPEN </b>+</div>
+      </button>
+      <button class="card c2" data-modal="m2" aria-label="Module B: تحليل بقع الدم">
+        <div class="tag">B</div>
+        <svg class="ico" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M32 6C24 20 14 28 14 40a18 18 0 0036 0C50 28 40 20 32 6z"/><path d="M24 42a8 8 0 008 8"/><circle cx="54" cy="12" r="2"/><circle cx="10" cy="14" r="1.5"/></svg>
+        <div class="ar">تحليل بقع الدم</div>
+        <h3>Blood Stain Analysis</h3>
+        <div class="open"><b>OPEN </b>+</div>
+      </button>
+      <button class="card c3" data-modal="m3" aria-label="Module C: التغيرات بعد الوفاة">
+        <div class="tag">C</div>
+        <svg class="ico" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="32" cy="32" r="24"/><path d="M32 16v16l11 7"/><path d="M32 8v4M32 52v4M8 32h4M52 32h4"/></svg>
+        <div class="ar">التغيرات بعد الوفاة</div>
+        <h3>Post-Mortem Changes</h3>
+        <div class="open"><b>OPEN </b>+</div>
+      </button>
+    </div>
+  </div>
+</main>
+
+<!-- ============ MODALS (templates filled by JS) ============ -->
+<dialog id="m1" style="--c:var(--wine)" aria-labelledby="t1"></dialog>
+<dialog id="m2" style="--c:var(--stamp)" aria-labelledby="t2"></dialog>
+<dialog id="m3" style="--c:var(--gray)" aria-labelledby="t3"></dialog>
+
+<script>
+(function(){
+  var views=['cover','report','analysis'];
+  var VIDEO_SRC=''; // paste your video file path or URL here, e.g. 'evidence.mp4'
+
+  function show(id,push){
+    if(views.indexOf(id)<0)id='cover';
+    views.forEach(function(v){document.getElementById(v).classList.toggle('active',v===id)});
+    document.querySelectorAll('.nav button').forEach(function(b){b.setAttribute('aria-current',b.dataset.go===id)});
+    window.scrollTo(0,0);
+    try{if(push!==false)history.replaceState(null,'','#'+id)}catch(e){}
+  }
+  document.addEventListener('click',function(e){
+    var g=e.target.closest('[data-go]');if(g){show(g.dataset.go);return}
+    var m=e.target.closest('[data-modal]');if(m){document.getElementById(m.dataset.modal).showModal();return}
+    var c=e.target.closest('[data-close]');if(c){c.closest('dialog').close();return}
+    if(e.target.tagName==='DIALOG')e.target.close();
+  });
+  window.addEventListener('hashchange',function(){show(location.hash.slice(1),false)});
+  show(location.hash.slice(1)||'cover',false);
+
+  /* flashlight: follows finger/mouse, roams by itself when idle */
+  var cv=document.getElementById('cover');
+  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var x=innerWidth*.5,y=innerHeight*.35,tx=x,ty=y,lastPtr=-9999;
+  function aim(px,py){tx=px;ty=py;lastPtr=performance.now()}
+  window.addEventListener('pointermove',function(e){aim(e.clientX,e.clientY)},{passive:true});
+  window.addEventListener('pointerdown',function(e){aim(e.clientX,e.clientY)},{passive:true});
+  window.addEventListener('touchmove',function(e){var t=e.touches[0];if(t)aim(t.clientX,t.clientY)},{passive:true});
+  function tick(t){
+    if(cv.classList.contains('active')){
+      var w=innerWidth,h=innerHeight;
+      if(!reduce&&performance.now()-lastPtr>2500){
+        tx=w*(.5+.36*Math.sin(t/2300));
+        ty=h*(.45+.32*Math.sin(t/1700+1));
+      }
+      x+=(tx-x)*.08;y+=(ty-y)*.08;
+      cv.style.setProperty('--mx',x.toFixed(1)+'px');
+      cv.style.setProperty('--my',y.toFixed(1)+'px');
+      cv.style.setProperty('--r',Math.max(90,Math.min(150,Math.min(w,h)*.2)).toFixed(0)+'px');
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  /* video */
+  var vid=document.getElementById('vid'),ph=document.getElementById('ph');
+  function load(src){vid.src=src;ph.classList.add('hide');vid.play().catch(function(){})}
+  if(VIDEO_SRC){vid.src=VIDEO_SRC;ph.classList.add('hide')}
+  vid.addEventListener('loadedmetadata',function(){ph.classList.add('hide')}); /* report.* found next to this file */
+  document.getElementById('playBtn').addEventListener('click',function(){if(VIDEO_SRC||vid.src){ph.classList.add('hide');vid.play()}});
+  document.getElementById('vfile').addEventListener('change',function(e){var f=e.target.files[0];if(f)load(URL.createObjectURL(f))});
+
+  /* report panels: edit these blocks to paste real findings later */
+  var mods=[
+    {id:'m1',id2:'t1',en:'DEATH & ASPHYXIA',ar:'الوفاة والاختناق'},
+    {id:'m2',id2:'t2',en:'BLOOD STAIN ANALYSIS',ar:'تحليل بقع الدم'},
+    {id:'m3',id2:'t3',en:'POST-MORTEM CHANGES',ar:'التغيرات بعد الوفاة'}
+  ];
+  function slot(n){return '<div class="img"><span>IMAGE SLOT '+n+'<br>click to add</span><input type="file" accept="image/*" data-img></div>'}
+
+  /* ===== DEATH & ASPHYXIA: seven exhibits (media files sit next to index.html: fly, fro, tyabos1, tyabos2, neck, eye, blot, fecal) ===== */
+  var IMG_EXT=['jpg','jpeg','png','webp','JPG','JPEG','PNG','gif'];
+  var VID_EXT=[['mp4','video/mp4'],['MOV','video/mp4'],['mov','video/quicktime'],['MP4','video/mp4'],['webm','video/webm'],['m4v','video/mp4']];
+  var figN=0;
+  function fig(kind,name,cap){figN++;return '<figure class="fig" data-kind="'+kind+'" data-name="'+name+'"><div class="fm"></div></figure>'}
+  function ex(n,stamp,ar,en,kick,inner){return '<section class="ex rv" id="ex'+n+'"><div class="extab">EXHIBIT 0'+n+'</div><div class="stampx">'+stamp+'</div><h5 class="exh">'+ar+'</h5><div class="exen">'+en+'</div><div class="kick">'+kick+'</div><div class="exp">'+inner+'</div></section>'}
+  function s5(n,ar,en,body){return '<div class="s5"><h6><b>5.'+n+'</b>'+ar+'</h6><div class="exen">'+en+'</div><p>'+body+'</p></div>'}
+
+  function buildDeath(){
+    var idx='';for(var i=1;i<=7;i++)idx+='<button data-jump="ex'+i+'" aria-label="Exhibit '+i+'">0'+i+'</button>';
+    var h='<div class="mhead"><h3 id="t1">DEATH & ASPHYXIA<span>الوفاة والاختناق</span></h3><button class="back" data-close aria-label="Back"><i aria-hidden="true">‹</i>BACK</button></div><div class="dx">'+
+    '<div class="dx-intro"><small>CASE 2026-GOAT-042</small><strong>الأدلة السبعة</strong><p>افتح الأدلة بالترتيب… وبلاش تسيب الذبابة لوحدها.</p><div class="dx-idx">'+idx+'</div></div>';
+
+    h+=ex(1,'WITNESSES: BUZZING','الفحص الحشري والتغيرات الرمية','Forensic Entomology & Post-Mortem Changes',
+      'الشهود الأوائل: <span class="redact" tabindex="0">ذباب أزرق وأخضر</span> — حضروا من غير دعوة.',
+      '<p>لوحظ تجمع كثيف من الذباب الأزرق والأخضر <span class="lat">(Blowflies)</span>، بالإضافة إلى عينات من الدبابير <span class="lat">(Wasps)</span>، حول الجرح وبعض الفتحات الطبيعية للجسم.</p>'+
+      '<p>يشير هذا التجمع إلى تعرض الجثة للبيئة الخارجية ووجود نشاط حشري مرتبط بعملية التحلل، وهو ما يتوافق مع التغيرات الرمية المصاحبة للوفاة.</p>'+
+      '<p>كما لوحظ وجود ذبابة <span class="lat">Muscina</span>، وهي علامة على <mark>مرور 6 ساعات على الموت</mark>، وفقًا للقاعدة المعتمدة في التقييم.</p>'+
+      '<p>ولوحظ شحوب واضح في الجلد والفراء، خاصة في المنطقة المحيطة بالقوائم الخلفية، وهي علامة تتوافق مع شحوب الموت <span class="lat">(Pallor Mortis)</span> الناتج عن توقف الدورة الدموية والتغيرات التي تطرأ على توزيع الدم بعد الوفاة.</p>'+
+      fig('video','fly','fly · شهادة الذباب')+fig('image','fro','fro'));
+
+    h+=ex(2,'T.O.D. ≈ 18–24 H','تقدير الفترة المنقضية منذ الوفاة','Post-Mortem Interval — PMI',
+      'الساعة وقفت… والعضلات كمان، بس كل واحدة وقفت في ميعادها.',
+      '<p>أظهر الفحص أن الجثة باردة تمامًا، مع وصولها إلى حالة من التوازن الحراري مع الوسط المحيط <span class="lat">(Thermal Equilibrium)</span>، وهو ما يتوافق مع تقدم التبريد الرمي <span class="lat">(Algor Mortis)</span>.</p>'+
+      '<p>كما أظهر فحص التصلب الرمي <span class="lat">(Rigor Mortis)</span> النتائج التالية:</p>'+
+      '<ul><li>تصلب شديد في عضلات العين والفك السفلي واللسان.</li><li>ارتخاء واضح في الأطراف الأمامية <span class="lat">(Forelimbs)</span>.</li><li>استمرار التيبس في الأطراف الخلفية <span class="lat">(Hind limbs)</span>.</li></ul>'+
+      '<p>يتوافق هذا التوزيع مع اختلاف مرحلة التصلب الرمي بين المجموعات العضلية، مع بدء الارتخاء في بعض المناطق واستمرار التيبس في مناطق أخرى.</p>'+
+      '<p>وبالاستناد إلى التغيرات الرمية الموصوفة، وبرودة الجثة، ونشاط الحشرات، والتيبس في الجزء الخلفي، قُدّرت الفترة المنقضية منذ الوفاة بنحو <mark>18–24 ساعة</mark> في الظروف الجوية الحارة، وفق التقدير الأولي للحالة.</p>'+
+      fig('video','tyabos1','tyabos1')+fig('video','tyabos2','tyabos2'));
+
+    h+=ex(3,'POST-MORTEM ONLY','فحص جرح الرقبة وتحديد توقيته','Wound Examination & Vital Reaction',
+      'المتهم: كلب شارد · التهمة: النهش… <b>بعد</b> الوفاة فقط.',
+      '<p>أظهر فحص جرح الرقبة الخلفي أن حوافه باهتة وجافة، مع مظهر رقّي، ودون وجود نزيف نشط أو تورم التهابي واضح.</p>'+
+      '<p>وتشير هذه الصفات، بالاقتران مع غياب جرح ظاهر في الجزء الأمامي من الرقبة والبلعوم، إلى أن الإصابة قد تكون حدثت بعد الوفاة نتيجة نهش الحيوانات الشاردة أو الكلاب الضالة.</p>'+
+      '<p>وبناءً على التفسير التشخيصي للحالة، صُنّف الجرح باعتباره إصابة يُشتبه في كونها تالية للموت <span class="lat">(Post-Mortem Lesion)</span>، وليس جرح ذبح مسؤولًا عن النفوق.</p>'+
+      fig('image','neck','neck'));
+
+    h+=ex(4,'GURGLE ALERT','الفحص التشريحي الباطني','Internal Post-Mortem Examination',
+      'الكرش اتحوّل لبالون عيد ميلاد… بس مفيش حد بيحتفل.',
+      '<p>أظهر وصف الفحص الباطني مجموعة من العلامات التي تتوافق مع الاشتباه في النفوق نتيجة النفخة الحادة والاختناق الميكانيكي.</p>'+
+      s5(1,'الانتفاخ البطني الشديد','Acute Ruminal Tympany','لوحظ تمدد شديد ذو مظهر بالوني في منطقة البطن، يتوافق مع تراكم كميات كبيرة من الغازات داخل الكرش نتيجة التخمر السريع لمحتوياته. أدى هذا التمدد إلى زيادة الضغط داخل التجويف البطني، مع احتمال دفع الحجاب الحاجز باتجاه التجويف الصدري، مما يحد من تمدد الرئتين ويعيق عملية التنفس.')+
+      s5(2,'خروج السوائل الرغوية من الفم والأنف','Oral and Nasal Frothy Discharge','عند تحريك الجثة، لوحظ خروج سائل خفيف ممزوج بالدم والرغوة من الفم والأنف. ارتبطت هذه الملاحظة في سياق الحالة بالاضطراب التنفسي والاحتقان الحشوي، إلى جانب تحرك السوائل داخل الجسم بعد الوفاة.')+
+      s5(3,'خروج الغازات المصحوب بصوت الخرخرة','Forensic Gurgling Sign','عند الضغط اليدوي على البطن المنتفخ، لوحظ اندفاع الغازات من منطقة الجرح الخلفي بالرقبة، مصحوبًا بصوت خرخرة واضح. تتوافق هذه العلامة مع وجود غازات وضغط داخل الجسم، وتُفسر ضمن مجموعة الملاحظات المصاحبة للانتفاخ البطني الشديد.')+
+      s5(4,'التغيرات العينية','Ocular Changes','لوحظ اسوداد شديد بالعين، مع تلون أزرق داكن بالجفن العلوي، بالإضافة إلى جفاف سطح العين، بما يتوافق مع التغيرات العينية الرمية بعد الوفاة. وفي سياق الحالة، جرى ربط التغيرات اللونية بالاشتباه في اضطراب الأكسجة والاحتقان المصاحبين لآلية الاختناق.')+
+      s5(5,'طبيعة الروث','Fecal Findings','وُصف وجود محتوى برازي جاف ومتفتت في المنطقة الخلفية، يشبه الدقيق في مظهره. وقد ارتبطت هذه الملاحظة بالاشتباه في وجود اضطراب هضمي سابق للوفاة، ضمن سياق النفخة الحادة وتراكم الغازات داخل الكرش.')+
+      fig('image','eye','eye')+fig('video','blot','blot')+fig('image','fecal','fecal'));
+
+    h+=ex(5,'AIR: DENIED','آلية الوفاة المرضية','Pathophysiology of Asphyxial Death',
+      'كيف يتحول بالون صغير إلى مأساة كاملة — الدليل بالخطوات.',
+      '<div class="chain"><div>تخمر سريع لمحتويات الكرش<small>RAPID FERMENTATION</small></div><i>▼</i><div>تراكم الغازات وتمدد بطني شديد<small>ACUTE TYMPANY</small></div><i>▼</i><div>ضغط ميكانيكي على الحجاب الحاجز<small>DIAPHRAGM PRESSURE</small></div><i>▼</i><div>الرئتان لا تتمددان بصورة طبيعية<small>RESTRICTED VENTILATION</small></div><i>▼</i><div>Hypoxia → Anoxia + Hypercapnia<small>OXYGEN OUT · CO₂ IN</small></div><i>▼</i><div>قصور تنفسي ← نفوق<small>RESPIRATORY FAILURE</small></div></div>'+
+      '<p>وفقًا للتشخيص المقترح للحالة، تتمثل آلية الوفاة في الاختناق الميكانيكي الحاد <span class="lat">(Acute Mechanical Asphyxia)</span> الناتج عن النفخة الكرشية الشديدة.</p>'+
+      '<p>أدى التخمر السريع لمحتويات الكرش إلى تراكم الغازات وحدوث تمدد بطني شديد، نتج عنه ضغط ميكانيكي على الحجاب الحاجز، مما حدّ من قدرته على الحركة ومنع الرئتين من التمدد بصورة طبيعية.</p>'+
+      '<p>ونتيجة لذلك، حدث اضطراب في التهوية الرئوية، أدى إلى نقص الأكسجة <span class="lat">(Hypoxia)</span>، وقد يتطور إلى انعدام الأكسجة <span class="lat">(Anoxia)</span>، مع احتباس ثاني أكسيد الكربون في الجسم <span class="lat">(Hypercapnia)</span>.</p>'+
+      '<p>وقد أدى استمرار القصور التنفسي إلى اضطراب الوظائف الحيوية وحدوث النفوق.</p>'+
+      '<p>وتُفسَّر العلامات المصاحبة، مثل الانتفاخ البطني الشديد، وخروج السوائل الرغوية، والتغيرات العينية، ضمن السياق المرضي والرمّي للحالة.</p>');
+
+    h+=ex(6,'CASE: LINKED','الربط بين سبب الوفاة والتغيرات الرمية','Integrated Forensic Interpretation',
+      'المعاينة الخارجية والتشريح قعدوا مع بعض… واتفقوا.',
+      '<p>عند جمع نتائج المعاينة الخارجية والفحص التشريحي والتغيرات الرمية، يمكن تقسيم النتائج إلى مجموعتين أساسيتين:</p>'+
+      '<div class="sp"><h6>أ. العلامات المرتبطة بآلية الوفاة<small>CAUSE-RELATED SIGNS</small></h6><ul><li>الانتفاخ البطني الشديد المتوافق مع النفخة الكرشية الحادة.</li><li>الاشتباه في ضغط الكرش على الحجاب الحاجز وإعاقة التهوية الرئوية.</li><li>خروج السوائل الرغوية من الفم والأنف.</li><li>التغيرات العينية المصاحبة للحالة.</li></ul></div>'+
+      '<div class="sp b"><h6>ب. العلامات المرتبطة بمرحلة ما بعد الوفاة<small>POST-MORTEM SIGNS</small></h6><ul><li>التبريد الرمي <span class="lat">(Algor Mortis)</span>.</li><li>التصلب الرمي <span class="lat">(Rigor Mortis)</span>.</li><li>شحوب الموت <span class="lat">(Pallor Mortis)</span>.</li><li>جفاف سطح العين.</li><li>التجمعات الحشرية حول الجثة.</li><li>جرح الرقبة الخلفي المشتبه في ارتباطه بنهش الحيوانات الشاردة بعد النفوق.</li></ul></div>'+
+      '<p>وبذلك، يربط التفسير التشخيصي بين النفخة الكرشية بوصفها السبب المرضي المحتمل، والاختناق الميكانيكي بوصفه آلية الوفاة، والتغيرات الرمية والجرح الخلفي بوصفها مظاهر مرتبطة بالجثة بعد الموت.</p>');
+
+    h+=ex(7,'FINAL VERDICT','التشخيص النهائي','Final Forensic Diagnosis',
+      'اللغز اتحل · الجاني الحقيقي: <span class="redact" tabindex="0">الكرش</span>.',
+      '<div class="vr"><small>SUSPECTED CAUSE</small><b>السبب المرضي المشتبه به للوفاة</b><span>النفخة الكرشية الحادة <span class="lat">(Acute Ruminal Tympany)</span>.</span></div>'+
+      '<div class="vr"><small>MECHANISM OF DEATH</small><b>آلية الوفاة</b><span>الاختناق الميكانيكي الحاد <span class="lat">(Acute Mechanical Asphyxia)</span>، نتيجة تمدد الكرش وضغطه على الحجاب الحاجز، مما أدى إلى إعاقة التنفس وحدوث نقص الأكسجة والقصور التنفسي.</span></div>'+
+      '<div class="vr"><small>POST-MORTEM CHANGES</small><b>التغيرات الرمية المصاحبة</b><span>التبريد الرمي، والتصلب الرمي، وشحوب الموت، وجفاف العين، ونشاط الحشرات حول الجثة.</span></div>'+
+      '<div class="vr"><small>NECK WOUND</small><b>تفسير جرح الرقبة</b><span>إصابة خلفية مشتبه في كونها تالية للوفاة نتيجة نهش الحيوانات الشاردة، وليست السبب الرئيسي للنفوق وفق التفسير التشخيصي للحالة.</span></div>'+
+      '<div class="vr"><small>POST-MORTEM INTERVAL</small><b>الفترة المنقضية منذ الوفاة (PMI)</b><span>تُقدّر مبدئيًا بنحو <mark>18–24 ساعة</mark> في الظروف الجوية الحارة، وفق العلامات الرمية الموصوفة.</span></div>'+
+      '<div class="concl"><b>الخلاصة النهائية</b><p>تشير المعطيات التشريحية والمرضية الموصوفة إلى أن النفوق يُعزى إلى الاختناق الميكانيكي المرتبط بالنفخة الكرشية الحادة.</p><p>أما جرح الرقبة الخلفي والتجمعات الحشرية، فيُفسَّران باعتبارهما من المظاهر المرتبطة بمرحلة ما بعد الوفاة، مع ترجيح تعرض الجثة للنهش الحيواني بعد النفوق.</p></div>'+
+      '<span class="closed">CASE CLOSED<small>FILE 2026-GOAT-042</small></span>');
+
+    document.getElementById('m1').innerHTML=h+'</div>';
+  }
+
+  function hydrate(fg){
+    var kind=fg.dataset.kind,name=fg.dataset.name,box=fg.querySelector('.fm');
+    function make(u){var el=document.createElement(kind==='video'?'video':'img');el.src=u;if(kind==='video'){el.controls=true;el.setAttribute('playsinline','');el.preload='metadata'}else el.alt=name;return el}
+    function missing(){
+      box.innerHTML='<label class="miss"><b>'+name+'</b><span>'+(kind==='video'?'ضع الفيديو بجانب index.html باسم ':'ضع الصورة بجانب index.html باسم ')+name+'</span><u>أو اختاره من جهازك</u><input type="file" accept="'+kind+'/*"></label>';
+      box.querySelector('input').addEventListener('change',function(e){var f=e.target.files[0];if(!f)return;box.innerHTML='';box.appendChild(make(URL.createObjectURL(f)))});
+    }
+    if(kind==='image'){
+      var i=0,im=new Image();im.alt=name;
+      im.onerror=function(){i++;if(i<IMG_EXT.length)im.src=name+'.'+IMG_EXT[i];else missing()};
+      im.onload=function(){box.innerHTML='';box.appendChild(im)};
+      im.src=name+'.'+IMG_EXT[0];
+    }else{
+      var v=document.createElement('video');v.controls=true;v.setAttribute('playsinline','');v.preload='metadata';
+      VID_EXT.forEach(function(p,k){var s=document.createElement('source');s.src=name+'.'+p[0];s.type=p[1];if(k===VID_EXT.length-1)s.addEventListener('error',missing);v.appendChild(s)});
+      box.appendChild(v);
+    }
+  }
+
+  /* ===== BLOOD STAIN ANALYSIS (image file: blood) ===== */
+  buildDeath();
+  function exb(n,stamp,ar,en,kick,inner){return '<section class="ex rv" id="bx'+n+'"><div class="extab">SECTION 0'+n+'</div><div class="stampx">'+stamp+'</div><h5 class="exh">'+ar+'</h5><div class="exen">'+en+'</div><div class="kick">'+kick+'</div><div class="exp">'+inner+'</div></section>'}
+  function sb(num,ar,en,body){return '<div class="s5"><h6><b>'+num+'</b>'+ar+'</h6><div class="exen">'+en+'</div><p>'+body+'</p></div>'}
+  function buildBlood(){
+    figN=0;
+    var idx='';for(var i=1;i<=5;i++)idx+='<button data-jump="bx'+i+'" aria-label="Section '+i+'">0'+i+'</button>';
+    var h='<div class="mhead"><h3 id="t2">BLOOD STAIN ANALYSIS<span>تحليل بقع الدم</span></h3><button class="back" data-close aria-label="Back"><i aria-hidden="true">‹</i>BACK</button></div><div class="dx">'+
+    '<div class="dx-intro"><small>BLOODSTAIN PATTERN ANALYSIS REPORT</small><strong>تقرير تحليل أنماط بقع الدم بمسرح المعاينة</strong><div class="dx-idx">'+idx+'</div></div>'+
+    fig('image','blood','blood · مسرح المعاينة');
+
+    h+=exb(1,'SCENE: BASELINE','البيانات الأولية لمسرح المعاينة','Scene & Evidence Baseline',
+      'الأرضية شاهد ممتاز: ناعمة، ومبتحبش تشرب الأدلة.',
+      sb('1.1','طبيعة السطح المستهدف','Nature of Target Surface','أرضية صلبة وناعمة وغير نفوذة <span class="lat">(Hard, smooth, nonporous surface)</span>، مما منع تشرب الدم وحافظ على شكل البقع وحوافها.')+
+      sb('1.2','الحالة الفيزيائية والمظهر','Physical Properties','ظهر الدم بلون أحمر زاهٍ إلى أحمر قانٍ <span class="lat">(Bright Red Color)</span>، مع لزوجة واضحة ولمعان، ولم يصل إلى مرحلة الجفاف الكامل أو التلون البني الداكن.'));
+
+    h+=exb(2,'GUSHING','نمط التجمع الشرياني والبرك','Arterial Pooling & Gushing',
+      'بركة واحدة… وقصتها أكبر منها.',
+      '<p>لوحظ تجمع دموي غزير ومكثف <span class="lat">(Copious blood stain)</span> في منتصف مسرح المعاينة، يغطي مساحة دائرية غير منتظمة، مع وجود خطوط تدفق متعرجة <span class="lat">(Flow patterns)</span> تمتد نحو المناطق الأكثر انخفاضًا في الأرضية.</p>'+
+      '<p>ظهرت بعض التعرجات في حواف التجمع الدموي نتيجة اندفاع الدم تحت الضغط الشرياني <span class="lat">(Arterial spurting)</span>. وتراوحت سماكة البركة الدموية بين <mark>2 و4 ملم</mark> في المناطق العميقة، مع بداية ظهور تخثر بسيط <span class="lat">(Clotting)</span> عند الأطراف.</p>'+
+      '<p>يشير هذا النمط إلى حدوث قطع في وعاء دموي رئيسي، مثل الشريان السباتي أو الفخذي، مع بقاء الضحية في وضعية ثابتة لفترة كافية لتراكم الدم قبل انخفاض الضغط الشرياني أو حدوث الوفاة.</p>');
+
+    h+=exb(3,'SPATTER ANALYSIS','نمط بقع الدم المتناثرة بفعل القوة الدافعة','Impact Spatter Patterns',
+      'قطرات صغيرة… بتحكي كتير.',
+      '<p>لوحظت بقع دموية دائرية وبيضاوية متناثرة بشكل شعاعي ومحيطي حول البركة الدموية المركزية، وتراوح قطر القطرات بين <mark>1 و3 ملم</mark>، مما يصنفها ضمن بقع التناثر متوسطة السرعة <span class="lat">(Medium Velocity Spatter)</span>.</p>'+
+      '<p>تم حساب زاوية السقوط <span class="lat">(Impact Angle)</span> باستخدام نسبة العرض إلى الطول وفقًا للمعادلة:</p>'+
+      '<div class="fx">A = arcsin ( W / L )<small>IMPACT ANGLE FORMULA</small></div>'+
+      '<p>وأظهرت القياسات أن زوايا السقوط تتراوح بين 45 و60 درجة عند الأطراف، وتصل إلى 90 درجة في القطرات الدائرية الموجودة فوق منطقة النزف.</p>'+
+      '<p>كما تشير ذيول القطرات المستدقة والقطرات الثانوية الناتجة عن التناثر <span class="lat">(Satellite Spatters)</span> إلى اتجاه حركة الدم من الداخل إلى الخارج.</p>'+
+      '<p>تؤكد هذه الأنماط تعرض الضحية لاعتداء ميكانيكي متكرر، مثل الضرب بأداة كليلة أو الطعن المتكرر في الموقع نفسه، وتساعد على تحديد منطقة نشأة التناثر <span class="lat">(Area of Origin)</span>.</p>');
+
+    h+=exb(4,'SWIPE DETECTED','أنماط الانتقال والمسح','Transfer & Swipe Patterns',
+      'اللي مشي هنا ساب توقيعه… بالمسح.',
+      '<p>لوحظت لطخات دموية ذات حواف غير منتظمة وممتدة على السطح المستهدف. وبدأت بعض اللطخات بكثافة دم عالية ولون داكن، ثم قلت الكثافة تدريجيًا حتى ظهرت حواف ريشية باهتة <span class="lat">(Feathered Edges)</span>، تشير إلى اتجاه الحركة على السطح.</p>'+
+      '<p>تدل هذه الأنماط على حركة جسم ملوث بالدم واحتكاكه مباشرة بالأرضية الناعمة، مما يرجح محاولة سحب الجثة أو تحرك المشتبه به بقدم أو أداة ملوثة بالدم عبر مسرح المعاينة بعد حدوث النزف.</p>');
+
+    h+=exb(5,'RECONSTRUCTED','الخلاصة الجنائية والتتابع الزمني للأحداث','Forensic Conclusion & Reconstruction',
+      'إعادة بناء الأحداث: من أول قطرة لآخر لطخة.',
+      '<p>تدعم الشواهد الفيزيائية والهندسية بمسرح الجريمة فرضية تعرض الضحية لقطع في شريان رئيسي، بما يتوافق مع آلية الذبح أو قطع الشرايين الرئيسية في منطقة العنق.</p>'+
+      '<p>ويشير تراكم الدم في البركة الدموية ووجود قطرات ذات زاوية سقوط عمودية (90 درجة) إلى ثبات نسبي للضحية، سواء في وضعية الجلوس أو الانحناء أو السقوط في الموقع نفسه، لفترة تسمح بتدفق الدم وتجمعه قبل انخفاض الدورة الدموية.</p>'+
+      '<p>وبحسب التتابع الزمني المقترح، بدأ الاعتداء بحركة أدت إلى تناثر الدم متوسط السرعة، ثم حدث تدفق غزير للدم وتكوّنت البركة الدموية، وبعد ذلك ظهرت آثار المسح واللطخ نتيجة حركة ميكانيكية لاحقة، مثل محاولة نقل الجثة أو تحرك الفاعل.</p>'+
+      '<div class="chain"><div>حركة الاعتداء ← تناثر متوسط السرعة<small>MEDIUM VELOCITY SPATTER</small></div><i>▼</i><div>تدفق غزير ← تكوّن البركة الدموية<small>ARTERIAL POOLING</small></div><i>▼</i><div>حركة لاحقة ← آثار المسح واللطخ<small>TRANSFER & SWIPE</small></div></div>');
+
+    document.getElementById('m2').innerHTML=h+'</div>';
+  }
+  buildBlood();
+
+  /* ===== POST-MORTEM CHANGES (images: post, mortam, horse, cow, sheep, dog, cat) ===== */
+  function exe(n,stamp,t,sub,kick,inner){return '<section class="ex en rv" id="px'+n+'"><div class="extab">SECTION 0'+n+'</div><div class="stampx">'+stamp+'</div><h5 class="exh">'+t+'</h5><div class="exen">'+sub+'</div><div class="kick">'+kick+'</div><div class="exp">'+inner+'</div></section>'}
+  function afig(name,label,hero){return '<figure class="fig'+(hero?' hero':'')+'" data-kind="image" data-name="'+name+'"><div class="fm"></div><div class="an-cap">'+label+'</div></figure>'}
+  function buildRigor(){
+    var h='<div class="mhead"><h3 id="t3">POST-MORTEM CHANGES<span>التغيرات بعد الوفاة</span></h3><button class="back" data-close aria-label="Back"><i aria-hidden="true">‹</i>BACK</button></div><div class="dx">'+
+    '<div class="pair one">'+fig('image','post','post')+'</div>';
+
+    h+=exe(1,'ATP: 0%','Rigor Mortis','Postmortem stiffening of muscles',
+      'When the ATP checks out, the muscles check in… permanently.',
+      '<p>Rigor mortis is the postmortem stiffening of muscles that occurs after death due to ATP depletion.</p>');
+
+    h+=exe(2,'NO ATP, NO RELAX','The Mechanism','Why muscles lock after death',
+      'Three steps from relaxed to rock-solid.',
+      '<div class="chain"><div>After death, ATP production stops.<small>STEP 01</small></div><i>▼</i><div>Actin and myosin filaments remain attached.<small>STEP 02</small></div><i>▼</i><div>Muscles become stiff and cannot relax.<small>STEP 03</small></div></div>'+
+      '<div class="sp"><h6>Normal (with ATP)<small>RELAXED</small></h6><p>Actin and myosin can separate → muscle is relaxed.</p></div>'+
+      '<div class="sp b"><h6>After death (no ATP)<small>RIGOR MORTIS</small></h6><p>Actin and myosin remain attached → muscle is stiff (rigor mortis).</p></div>');
+
+    h+=exe(3,'TIMELINE','Onset and Duration','From jaw to toe, then gone',
+      'It arrives on schedule, and it leaves on schedule.',
+      '<ul><li>Begins within a few hours after death.</li><li>Progresses throughout the body.</li><li>Usually starts in the jaw and neck, then spreads to the rest of the body.</li><li>Eventually disappears as muscle proteins break down during decomposition.</li></ul>');
+
+    h+='<div class="pair one rv">'+fig('image','mortam','mortam')+'</div>';
+
+    h+=exe(4,'VET NOTE','Veterinary Importance','Why it matters in practice',
+      'A stiff clue is still a clue.',
+      '<ul><li>Helps estimate the postmortem interval (time since death).</li><li>Assists in forensic investigations.</li><li>Its onset and duration vary with:<ul><li>Temperature</li><li>Species</li><li>Physical activity before death</li></ul></li></ul>'+
+      '<div class="concl"><p>Rigor mortis is a natural postmortem process caused by the inability of muscles to relax due to ATP depletion.</p></div>');
+
+    h+='<div class="sec-lab rv">SPECIMEN GALLERY</div>'+
+      '<div class="zoo rv">'+afig('horse','Horse',true)+afig('cow','Cow')+afig('sheep','Sheep')+afig('dog','Dog')+afig('cat','Cat')+'</div>';
+
+    document.getElementById('m3').innerHTML=h+'</div>';
+  }
+  buildRigor();
+
+  ['m1','m2','m3'].forEach(function(id){
+  document.querySelector('[data-modal="'+id+'"]').addEventListener('click',function(){
+    var d=document.getElementById(id);
+    d.querySelectorAll('.fig').forEach(hydrate);
+    var rv=d.querySelectorAll('.rv');
+    if('IntersectionObserver' in window){
+      var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}})},{threshold:.08});
+      rv.forEach(function(el){io.observe(el)});
+    }else rv.forEach(function(el){el.classList.add('in')});
+  },{once:true});
+  });
+  document.addEventListener('click',function(e){var j=e.target.closest('[data-jump]');if(j){var t=document.getElementById(j.dataset.jump);if(t)t.scrollIntoView({behavior:'smooth',block:'start'})}});
+  document.addEventListener('close',function(e){if(e.target.id==='m1')e.target.querySelectorAll('video').forEach(function(v){v.pause()})},true);
+
+  mods.forEach(function(m){
+    if(m.id==='m1'||m.id==='m2'||m.id==='m3')return;
+    document.getElementById(m.id).innerHTML=
+      '<div class="mhead"><h3 id="'+m.id2+'">'+m.en+'<span>'+m.ar+'</span></h3><button class="back" data-close aria-label="Back"><i aria-hidden="true">‹</i>BACK</button></div>'+
+      '<div class="mbody">'+
+        '<div class="blk"><h4>REPORT HEADER · عنوان التقرير</h4><div contenteditable="true" dir="auto">اكتب عنوان التقرير الفرعي هنا…</div></div>'+
+        '<div class="blk"><h4>KEY FINDINGS · النتائج الرئيسية</h4><div contenteditable="true" dir="auto">الصق النتائج الرئيسية هنا…</div></div>'+
+        '<div class="blk"><h4>EVIDENCE IMAGES · صور الأدلة</h4><div class="imgs">'+slot(1)+slot(2)+slot(3)+'</div></div>'+
+        '<div class="blk"><h4>FORENSIC NOTES · ملاحظات الطب الشرعي</h4><div contenteditable="true" dir="auto">أضف الملاحظات والاستنتاجات هنا…</div></div>'+
+      '</div>';
+  });
+  document.addEventListener('change',function(e){
+    if(!e.target.matches('[data-img]'))return;
+    var f=e.target.files[0];if(!f)return;
+    var box=e.target.parentNode,im=box.querySelector('img')||box.insertBefore(document.createElement('img'),box.firstChild);
+    im.alt='Evidence image';im.src=URL.createObjectURL(f);
+  });
+})();
+</script>
+</body>
+</html>
